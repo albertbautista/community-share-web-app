@@ -52,17 +52,18 @@ Visual Studio Code Recommended Extensions:
     Password for 'https://{yourusername}@github.com':
     ```
 15. For the username, enter your github username
-16. For the password, enter the token you just generated
+16. For the password, enter the token you just generated (Note: when you paste the token, the text will be invisible which is normal, it's just a security feature)
 17. You should now have the repository files cloned on your local machine
 
 ## BACKEND
 1. Open Visual Studio Code, click on File --> Open folder --> community-share-web-app\django-backend --> Select django-backend folder
-2. On Visual Studio Code, click on Terminal --> New Terminal
-3. Your directory path should look something like this:
+2. If a popup appears, select "Yes, I trust the authors"
+3. On Visual Studio Code, click on Terminal --> New Terminal
+4. Your directory path should look something like this:
    ```
    C:\Dev\community-share-web-app\django-backend>
    ```
-4. Run these commands if you are on MAC:
+5. Run these commands if you are on MAC:
    ```
    python3 -m venv venv
    ```
@@ -70,7 +71,7 @@ Visual Studio Code Recommended Extensions:
    source venv/bin/activate
    ```
 
-4. Run these commands if you are on WINDOWS:
+5. Run these commands if you are on WINDOWS:
    ```
    python -m venv venv
    ```
@@ -78,7 +79,7 @@ Visual Studio Code Recommended Extensions:
    venv\Scripts\Activate
    ```
 
-5. Next, run these commands:
+6. Next, run these commands:
    ```
    pip install -r requirements.txt
    ```
@@ -89,25 +90,25 @@ Visual Studio Code Recommended Extensions:
    python manage.py migrate
    ```
 
-6. Now, your backend set up should be done, all that's left to do is run the local server
-7. Run the command:
+7. Now, your backend set up should be done, all that's left to do is run the local server
+8. Run the command:
    ```
    python manage.py runserver
    ```
-8. In the terminal you should see the server running, where it should display the url of the backend server at running at http://127.0.0.1:8000/
-9. If you paste the URL into the browser, you'll see "Page Not Found", which is normal because we have nothing routed to that URL
-10. In your browser, change the URL to:
+9. In the terminal you should see the server running, where it should display the url of the backend server at running at http://127.0.0.1:8000/
+10. If you paste the URL into the browser, you'll see "Page Not Found", which is normal because we have nothing routed to that URL
+11. In your browser, change the URL to:
     ```
     http://127.0.0.1:8000/api/docs
     ```
-11. Here is where you can see and test the API endpoints for the backend.
+12. Here is where you can see and test the API endpoints for the backend.
 
-12. To close the server, use the shortcut:
+13. To close the server, on the terminal use the shortcut:
     ```
     Ctrl + C
     ```
 
-13. IMPORTANT!!: You have to do the following EVERY single time you open the django-backend folder in visual studio before you can run the server
+14. IMPORTANT!!: You have to do the following EVERY single time you open the django-backend folder in visual studio before you can run the server
        1. Open Visual Studio Code --> Click on Terminal --> New Terminal
        2. C:\Dev\community-share-web-app\django-backend>
        3. Run this command if you are on MAC:
@@ -130,23 +131,24 @@ Visual Studio Code Recommended Extensions:
 ## FRONTEND
 
 1. Open Visual Studio Code, click on File --> Open folder --> community-share-web-app\nextjs-frontend --> Select nextjs-frontend folder
-2. On Visual Studio Code, click on Terminal --> New Terminal
-3. Your directory path should look something like this:
+2. If a popup appears, select "Yes, I trust the authors"
+3. On Visual Studio Code, click on Terminal --> New Terminal
+4. Your directory path should look something like this:
 
    C:\Dev\community-share-web-app\nextjs-frontend>
 
-4. Run the command:
+5. Run the command:
    ```
    npm install
    ```
-5. Now, your front set up should be done, all that's left to do is run the local server
-6. To run the server, run the command:
+6. Now, your front set up should be done, all that's left to do is run the local server
+7. To run the server, run the command:
    ```
    npm run dev
    ```
-7. In the terminal you should see the server running, where it should display the url of the frontend local server at running at http://localhost:3000
-8. Paste the URL into browser to view the frontend UI
-9. To close the server, use the shortcut:
+8. In the terminal you should see the server running, where it should display the url of the frontend local server at running at http://localhost:3000
+9. Paste the URL into browser to view the frontend UI
+10. To close the server, on the terminal use the shortcut:
    ```     
    Ctrl + C
    ```
