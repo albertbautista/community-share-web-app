@@ -90,7 +90,7 @@ Visual Studio Code Recommended Extensions:
    python manage.py migrate
    ```
 
-7. Now, your backend set up should be done, all that's left to do is run the local server
+7. Now, your Backend setup should be done, all that's left to do is run the local server
 8. Run the command:
    ```
    python manage.py runserver
@@ -141,7 +141,7 @@ Visual Studio Code Recommended Extensions:
    ```
    npm install
    ```
-6. Now, your front set up should be done, all that's left to do is run the local server
+6. Now, your Frontend setup should be done, all that's left to do is run the local server
 7. To run the server, run the command:
    ```
    npm run dev
