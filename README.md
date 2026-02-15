@@ -146,7 +146,7 @@ Visual Studio Code Recommended Extensions:
    ```
    npm run dev
    ```
-8. In the terminal you should see the server running, where it should display the url of the frontend local server at running at http://localhost:3000
+8. In the terminal you should see the server running, where it should display the URL of the Frontend local server at running at http://localhost:3000
 9. Paste the URL into browser to view the frontend UI
 10. To close the server, on the terminal use the shortcut:
    ```     
