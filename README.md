@@ -27,33 +27,22 @@ Visual Studio Code Recommended Extensions:
 
 ## PROJECT SETUP:
 
-## CLONING THE PROJECT USING GIT
+## CLONING THE PROJECT
 
-1. Sign in to https://github.com/
-2. In the top-right corner of the GitHub page, click on your profile picture.
-3. From the dropdown menu, click on Settings.
-4. On the left sidebar of the Settings page, scroll down and click on Developer settings at the bottom.
-5. In Developer settings, click on Personal access tokens.
-6. From the dropdown menu, click on Tokens (classic)
-7. Click on Generate new token --> Generate new token (classic)
-8. On the New personal access token (classic) page, enter a note (I put Github repo for mine)
-9. For scopes, just select the "repo" checkbox.
-10. Expiration date you can leave at 30 days
-11. At the bottom, click on Generate Tokem
-12. You should have a generated token now, leave this page open for now as you'll come back to it later
-    
-13. Open the terminal, and run the command below to clone the repository in the directory of your choosing:
-    ```
-    git clone https://github.com/albertbautista/community-share-web-app.git
-    ```
-14. You will then see a prompt like this:
-    ```
-    Username for 'https://github.com':
-    Password for 'https://{yourusername}@github.com':
-    ```
-15. For the username, enter your github username
-16. For the password, enter the token you just generated (Note: when you paste the token, the text will be invisible which is normal, it's just a security feature)
-17. You should now have the repository files cloned on your local machine
+IMPORTANT: Since this is a private repository, before you can do anything I have to add you as a collaborator on GitHub.
+
+1. Open Visual Studio Code
+2. Click Source Control (Left sidebar under the magnifying glass icon)
+3. Click “Clone Repository” 
+4. Paste the repo URL:
+   ```
+   https://github.com/albertbautista/community-share-web-app.git
+   ```
+5. Select the directory where you want to clone the repository
+6. Sign in if prompted (VS Code may ask for login the first time)
+7. After cloning, VS Code will ask you if you want to open the cloned folder, click Open (This will open the root directory folder; do not do this in the future. Refer to step 9 tip)
+8. You can now pull, stage, commit, and push changes to the repo
+9. Tip: Open each project folder in its own VS Code window instead of opening the root directory. This keeps Git tracking separate for each folder and makes commits and pushes easier.
 
 ## BACKEND
 1. Open Visual Studio Code, click on File --> Open folder --> community-share-web-app\django-backend --> Select django-backend folder
@@ -152,3 +141,7 @@ Visual Studio Code Recommended Extensions:
    ```     
    Ctrl + C
    ```
+## Source Control
+
+1. On the left sidebar of Visual Studio Code, there is a panel for Source Control
+
