@@ -29,8 +29,6 @@ Visual Studio Code Recommended Extensions:
 
 ## CLONING THE PROJECT
 
-IMPORTANT: Since this is a private repository, before you can do anything I have to add you as a collaborator on GitHub.
-
 1. Open Visual Studio Code
 2. Click Source Control (Left sidebar under the magnifying glass icon)
 3. Click “Clone Repository” 
