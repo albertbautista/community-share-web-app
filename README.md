@@ -167,4 +167,4 @@ IMPORTANT: Since this is a private repository, before you can do anything I have
 
 6. Push your changes to the remote branch.
 
-7. Create a Pull Request to merge your changes with the main branch.
+7. Merge your changes with the main branch (Make you test everything works before you do this)
