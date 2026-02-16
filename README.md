@@ -159,7 +159,7 @@ IMPORTANT: Since this is a private repository, before you can do anything I have
 
 2. Create a new branch.
 
-3. Make changes in your files.
+3. Make changes to your files.
 
 4. Stage the changes.
 
