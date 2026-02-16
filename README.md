@@ -94,7 +94,7 @@ Visual Studio Code Recommended Extensions:
    ```
    python manage.py runserver
    ```
-9. In the terminal you should see the server running, where it should display the url of the backend server at running at http://127.0.0.1:8000/
+9. In the terminal you should see the server running, where it should display the url of the backend server running at http://127.0.0.1:8000/
 10. If you paste the URL into the browser, you'll see "Page Not Found", which is normal because we have nothing routed to that URL
 11. In your browser, change the URL to:
     ```
@@ -145,8 +145,8 @@ Visual Studio Code Recommended Extensions:
    ```
    npm run dev
    ```
-8. In the terminal you should see the server running, where it should display the URL of the Frontend local server at running at http://localhost:3000
-9. Paste the URL into browser to view the frontend UI
+8. In the terminal you should see the server running, where it should display the URL of the Frontend local server running at http://localhost:3000
+9. Paste the URL into browser to view the Frontend UI
 10. To close the server, on the terminal use the shortcut:
    ```     
    Ctrl + C
@@ -155,14 +155,19 @@ Visual Studio Code Recommended Extensions:
 
 1. Pull the latest changes.
 
-2. Create a new branch.
+2. Create a new local branch. (Use descriptive name, e.g. names like "feature/login" or "bugfix/navbar")
 
-3. Make changes to your files.
+3. Make changes.
 
 4. Stage the changes.
 
 5. Commit with a descriptive message.
 
-6. Push your changes to the remote branch.
+6. Push your local branch to the remote repository.
 
-7. Merge your changes with the main branch (Make you test everything works before you do this)
+7. Create a pull request
+
+8. Merge the pull request with the main branch (Make you test everything works before you do this)
+
+Useful Video:
+https://www.youtube.com/watch?v=eLmpKKaQL54
