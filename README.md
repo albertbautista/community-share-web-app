@@ -151,7 +151,3 @@ IMPORTANT: Since this is a private repository, before you can do anything I have
    ```     
    Ctrl + C
    ```
-## Source Control
-
-1. On the left sidebar of Visual Studio Code, there is a panel for Source Control
-
