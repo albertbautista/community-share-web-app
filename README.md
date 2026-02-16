@@ -155,7 +155,7 @@ IMPORTANT: Since this is a private repository, before you can do anything I have
    ```
 ## Source Control Flow
 
-1, Pull the latest changes.
+1. Pull the latest changes.
 
 2. Create a new branch.
 
