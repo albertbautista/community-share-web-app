@@ -43,7 +43,9 @@ IMPORTANT: Since this is a private repository, before you can do anything I have
 7. After cloning, VS Code will ask you if you want to open the cloned folder, click Open (This will open the root directory folder; do not do this in the future. Refer to step 9 Tip)
 8. You can now pull, stage, commit, and push changes to the repo
    
-9. Tip: Open each project folder in its own VS Code window instead of opening the root directory. This keeps Git tracking separate for each folder and makes commits and pushes easier.
+9. Tip:
+    
+    Open each project folder in its own VS Code window instead of opening the root directory. This keeps Git tracking separate for each folder and makes commits and pushes easier.
 
     E.g. Do not do this:
     File --> Open Folder --> community-share-web-app
