@@ -153,3 +153,18 @@ IMPORTANT: Since this is a private repository, before you can do anything I have
    ```     
    Ctrl + C
    ```
+## Source Control Flow
+
+1, Pull the latest changes.
+
+2. Create a new branch.
+
+3. Make changes in your files.
+
+4. Stage the changes.
+
+5. Commit with a descriptive message.
+
+6. Push your changes to the remote branch.
+
+7. Create a Pull Request to merge your changes with the main branch.
