@@ -42,7 +42,17 @@ IMPORTANT: Since this is a private repository, before you can do anything I have
 6. Sign in if prompted (VS Code may ask for login the first time)
 7. After cloning, VS Code will ask you if you want to open the cloned folder, click Open (This will open the root directory folder; do not do this in the future. Refer to step 9 tip)
 8. You can now pull, stage, commit, and push changes to the repo
+   
 9. Tip: Open each project folder in its own VS Code window instead of opening the root directory. This keeps Git tracking separate for each folder and makes commits and pushes easier.
+
+    E.g. Do not do this:
+    File --> open folder --> community-share-web-app
+
+    Instead open separate Visual Studio Code windows for each
+
+    File --> open folder --> community-share-web-app\django-backend
+
+    File --> open folder --> community-share-web-app\nextjs-frontend
 
 ## BACKEND
 1. Open Visual Studio Code, click on File --> Open folder --> community-share-web-app\django-backend --> Select django-backend folder
