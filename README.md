@@ -36,8 +36,8 @@ Visual Studio Code Recommended Extensions:
    ```
    https://github.com/albertbautista/community-share-web-app.git
    ```
-5. Select the directory where you want to clone the repository
-6. Sign in if prompted (VS Code may ask for login the first time)
+5. Sign in if prompted (VS Code may ask for github login the first time)
+6. Select the directory where you want to clone the repository
 7. After cloning, VS Code will ask you if you want to open the cloned folder, click Open (This will open the root directory folder; do not do this in the future. Refer to step 9 Tip)
 8. You can now pull, stage, commit, and push changes to the repo
    
