@@ -1,4 +1,5 @@
 from django.db import models
+from django.contrib.auth.models import User
 
 # Generic Post model, models are the blueprint (class) for what is created in the database
 
@@ -8,6 +9,7 @@ class Post(models.Model):
 
     title = models.CharField(max_length=200)
     content = models.TextField()
+    author = models.ForeignKey(User, on_delete=models.CASCADE) # Links the post to a User. If the user is deleted, their posts are also deleted.
     created_at = models.DateTimeField(auto_now_add=True)
 
     # Returns a string representation of the post (its title) for managing models in admin display (http://127.0.0.1:8000/admin)
