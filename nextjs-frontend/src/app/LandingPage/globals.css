@@ -1,48 +1,29 @@
-@import "tailwindcss";
-
-
-:root {
-  --background: #d7e3f4;
-  --foreground: #000000;
-}
-
 body {
   margin: 0;
-  background: var(--background);
-  color: var(--foreground);
   font-family: Verdana, Arial, sans-serif;
+  background-color: #d7e3f4;
 }
 
 .layout {
-  max-width: 960px;
-  width: 95%;
+  width: 960px;
   margin: 20px auto;
 }
-
 
 .navbar {
   position: sticky;
   top: 0;
   display: flex;
   justify-content: space-between;
-  align-items: center;
   background: linear-gradient(#3b6db0, #2a4f84);
   padding: 10px 20px;
   color: white;
 }
 
-.navbar-left {
+.nav-left {
   display: flex;
   gap: 20px;
+  align-items: center;
 }
-
-@media (max-width: 768px) {
-  .navbar-left {
-    flex-direction: column;
-    gap: 8px;
-  }
-}
-
 
 .navbar a {
   color: white;
@@ -54,15 +35,23 @@ body {
   text-decoration: underline;
 }
 
+.logo {
+  font-weight: bold;
+  margin-right: 20px;
+}
+
+.nav-right {
+  display: flex;
+  align-items: center;
+}
+
 .login-btn {
   background: #f5c542;
   padding: 6px 12px;
   border-radius: 3px;
   color: black;
   font-weight: bold;
-  text-decoration: none;
 }
-
 
 .box {
   background: white;
@@ -81,17 +70,8 @@ body {
   padding: 15px;
 }
 
-
-.services-grid {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 10px;
-}
-
-@media (max-width: 768px) {
-  .services-grid {
-    grid-template-columns: 1fr;
-  }
+.highlight {
+  background: #f0f6ff;
 }
 
 .primary-btn {
@@ -108,11 +88,15 @@ body {
   background: #2a4f84;
 }
 
+.services-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 10px;
+}
 
 .footer {
   text-align: center;
   padding: 15px;
   background: #e4edf9;
   border-top: 1px solid #9db3d1;
-  margin-top: 20px;
 }
