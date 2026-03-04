@@ -5,9 +5,9 @@ export default function CTA() {
             <section className="box highlight">
                 <div className="box-content center">
                     <h2>Need Something Fixed?</h2>
-                    <p>Post your job and get connected</p>
+                    <p>Post your job and get connected:</p>
                     <Link href="/post-job" className="primarybtn">
-                        Post a Job
+                        Click here to Post a Job.
                     </Link>
                     </div>
             </section>

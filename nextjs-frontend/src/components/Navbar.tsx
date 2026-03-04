@@ -9,6 +9,7 @@ export default function Navbar() {
                 <Link href="/">Home</Link>
                 <Link href="/post-job">Post a Job</Link>
                 <Link href="/browse">Browse Jobs</Link>
+                <Link href="/view">My Jobs</Link>
             </div>
 
             <div className="navbar-right">
