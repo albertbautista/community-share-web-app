@@ -7,9 +7,21 @@ from django.contrib.auth.models import User
 
 class Post(models.Model):
 
+    JOB_TYPES = [
+        ("plumbing", "Plumbing"),
+        ("electrical", "Electrical"),
+        ("painting", "Painting"),
+        ("yard", "Yard Work"),
+        ("assembly", "Furniture Assembly"),
+        ("maintenance", "General Maintenance"),
+        ("other", "Other"),
+    ]
+
     title = models.CharField(max_length=200)
     content = models.TextField()
-    author = models.ForeignKey(User, on_delete=models.CASCADE) # Links the post to a User. If the user is deleted, their posts are also deleted.
+    job_type = models.CharField(max_length=50, choices=JOB_TYPES, blank=True, default="other")
+    location = models.CharField(max_length=200, blank=True, default="")
+    author = models.ForeignKey(User, on_delete=models.CASCADE, related_name = "posts") # Links the post to a User. If the user is deleted, their posts are also deleted.
     created_at = models.DateTimeField(auto_now_add=True)
 
     # Returns a string representation of the post (its title) for managing models in admin display (http://127.0.0.1:8000/admin)

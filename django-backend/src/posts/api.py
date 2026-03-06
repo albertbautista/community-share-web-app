@@ -1,7 +1,8 @@
-from ninja import Router
+from ninja import Router, Query
 from .models import Post
-from .schemas import PostInputSchema, PostOutputSchema, ErrorOutputSchema
+from .schemas import PostInputSchema, PostOutputSchema, ErrorOutputSchema, JobTypeCountSchema
 from django.shortcuts import get_object_or_404
+from django.db.models import Count
 from ninja_jwt.authentication import JWTAuth
 
 # Endpoints here would route to the main api instance defined in src/config/api.py
@@ -27,6 +28,24 @@ router = Router()
 def get_posts(request):
     posts = Post.objects.order_by("-created_at")
     return 200, [PostOutputSchema.from_orm(post) for post in posts]
+
+# Get the most recent posts for landing page
+@router.get("/recent", response={200: list[PostOutputSchema]})
+def recent_posts(request, limit: int = Query(6, ge=1, le=50)):
+    posts = Post.objects.select_related("author").order_by("-created_at")[:limit]
+    return 200, [PostOutputSchema.from_orm(post) for post in posts]
+
+# Get job types ordered by how many posts exits in each
+@router.get("/job-types/popular", response={200: list[JobTypeCountSchema]})
+def popular_job_types(request, limit: int = Query(6, ge=1, le=20)):
+    rows = (
+        Post.objects.exclude(job_type__isnull=True)
+        .exclude(job_type__exact="")
+        .values("job_type")
+        .annotate(count=Count("id"))
+        .order_by("-count")[:limit]
+    )
+    return 200, list(rows)
 
 # Get all posts created by the user (PROTECTED)
 @router.get("/my-posts", auth=JWTAuth(), response={200: list[PostOutputSchema]})

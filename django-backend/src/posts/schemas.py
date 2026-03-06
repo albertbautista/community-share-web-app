@@ -24,3 +24,7 @@ class PostOutputSchema(Schema):
 
 class ErrorOutputSchema(Schema):
     error: str
+
+class JobTypeCountSchema(Schema):
+    job_type: str
+    count: int
