@@ -22,13 +22,6 @@ router = Router()
 # 4. Copy and paste the access token (without the double quotes) and click Authorize
 # 5. Now you are now authorized to use Protected Endpoints.
 
-
-# Get all posts 
-@router.get("/", response={200: list[PostOutputSchema]})
-def get_posts(request):
-    posts = Post.objects.order_by("-created_at")
-    return 200, [PostOutputSchema.from_orm(post) for post in posts]
-
 # Get the most recent posts for landing page
 @router.get("/recent", response={200: list[PostOutputSchema]})
 def recent_posts(request, limit: int = Query(6, ge=1, le=50)):
@@ -46,6 +39,12 @@ def popular_job_types(request, limit: int = Query(6, ge=1, le=20)):
         .order_by("-count")[:limit]
     )
     return 200, list(rows)
+
+# Get all posts 
+@router.get("/", response={200: list[PostOutputSchema]})
+def get_posts(request):
+    posts = Post.objects.order_by("-created_at")
+    return 200, [PostOutputSchema.from_orm(post) for post in posts]
 
 # Get all posts created by the user (PROTECTED)
 @router.get("/my-posts", auth=JWTAuth(), response={200: list[PostOutputSchema]})
