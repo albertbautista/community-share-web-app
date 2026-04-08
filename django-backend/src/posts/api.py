@@ -1,5 +1,5 @@
 from ninja import Router, Query
-from .models import Post
+from .models import Post, SavedPost
 from .schemas import PostInputSchema, PostOutputSchema, ErrorOutputSchema, JobTypeCountSchema
 from django.shortcuts import get_object_or_404
 from django.db.models import Count
@@ -28,7 +28,7 @@ def recent_posts(request, limit: int = Query(6, ge=1, le=50)):
     posts = Post.objects.select_related("author").order_by("-created_at")[:limit]
     return 200, [PostOutputSchema.from_orm(post) for post in posts]
 
-# Get job types ordered by how many posts exits in each
+# Get job types ordered by how many posts exist in each
 @router.get("/job-types/popular", response={200: list[JobTypeCountSchema]})
 def popular_job_types(request, limit: int = Query(6, ge=1, le=20)):
     rows = (
@@ -43,14 +43,42 @@ def popular_job_types(request, limit: int = Query(6, ge=1, le=20)):
 # Get all posts 
 @router.get("/", response={200: list[PostOutputSchema]})
 def get_posts(request):
-    posts = Post.objects.order_by("-created_at")
+    posts = Post.objects.select_related("author").order_by("-created_at")
     return 200, [PostOutputSchema.from_orm(post) for post in posts]
 
 # Get all posts created by the user (PROTECTED)
 @router.get("/my-posts", auth=JWTAuth(), response={200: list[PostOutputSchema]})
 def get_my_posts(request):
-    posts = Post.objects.filter(author=request.user).order_by("-created_at")
+    posts = Post.objects.select_related("author").filter(author=request.user).order_by("-created_at")
     return 200, [PostOutputSchema.from_orm(post) for post in posts]
+
+# List saved posts (PROTECTED)
+@router.get("/saved", auth=JWTAuth(), response={200: list[PostOutputSchema]})
+def list_saved_posts(request):
+    saved = (
+        SavedPost.objects
+        .filter(user=request.user)
+        .select_related("post", "post__author")
+        .order_by("-created_at")
+    )
+    posts = [s.post for s in saved]
+    return 200, [PostOutputSchema.from_orm(p) for p in posts]
+
+# Save a post (PROTECTED)
+@router.post("/{post_id}/save", auth=JWTAuth(), response={201: dict})
+def save_post(request, post_id: int):
+    post = get_object_or_404(Post, id=post_id)
+    saved, created = SavedPost.objects.get_or_create(user=request.user, post=post)
+    return 201, {"saved": True, "created": created}
+
+# Unsave a post (PROTECTED)
+@router.delete("/{post_id}/save", auth=JWTAuth(), response={204: None, 404: ErrorOutputSchema})
+def unsave_post(request, post_id: int):
+    post = get_object_or_404(Post, id=post_id)
+    deleted, _ = SavedPost.objects.filter(user=request.user, post=post).delete()
+    if deleted == 0:
+        return 404, {"error": "Post was not saved."}
+    return 204, None
 
 # Get a single post by its id
 @router.get("/{post_id}", response={200: PostOutputSchema}) 
@@ -64,6 +92,8 @@ def create_post(request, data: PostInputSchema):
     post = Post.objects.create(
         title=data.title,
         content=data.content,
+        job_type=data.job_type or "other",
+        location=data.location or "",
         author=request.user
     )
     return 201, PostOutputSchema.from_orm(post)
@@ -78,6 +108,8 @@ def update_post(request, post_id: int, data: PostInputSchema):
 
     post.title = data.title
     post.content = data.content
+    post.job_type = data.job_type or "other"
+    post.location = data.location or ""
 
     post.save()
     return 200, PostOutputSchema.from_orm(post)

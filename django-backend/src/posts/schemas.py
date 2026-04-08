@@ -1,5 +1,7 @@
 from ninja import Schema, Field
 from datetime import datetime
+from typing import Optional
+from datetime import datetime
 
 # Schemas for endpoint parameters would go here.
 
@@ -11,6 +13,8 @@ from datetime import datetime
 class PostInputSchema(Schema):
     title: str
     content: str
+    job_type: Optional[str] = "other"
+    location: Optional[str] = ""
 
 class AuthorSchema(Schema):
     username: str
