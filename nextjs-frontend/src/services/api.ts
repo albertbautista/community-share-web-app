@@ -28,6 +28,11 @@ export type RecentPost = {
   created_at: string;
 };
 
+export type Post = RecentPost & {
+  job_type: string;
+  location: string;
+};
+
 export type JobTypeCount = {
   job_type: string;
   count: number;
@@ -46,6 +51,10 @@ export type SignInData = {
 
 export const getRecentPosts = async (limit = 6): Promise<RecentPost[]> => {
   return apiFetch<RecentPost[]>(`/posts/recent?limit=${limit}`);
+};
+
+export const getAllPosts = async (): Promise<Post[]> => {
+  return apiFetch<Post[]>(`/posts/`);
 };
 
 export const getPopularJobTypes = async (

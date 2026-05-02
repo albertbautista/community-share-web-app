@@ -32,9 +32,15 @@ export default async function Home() {
                 {posts.map((post) => (
                   <li key={post.id} className="recent-post-item">
                     <h3>{post.title}</h3>
-                    <p>{post.content}</p>
                     <div className="recent-post-meta">
-                      Posted by {post.author.username}
+                      <span>Posted by {post.author.username}:</span>
+                      <span>
+                        {new Date(post.created_at).toLocaleDateString(undefined, {
+                          month: "long",
+                          day: "numeric",
+                          year: "numeric",
+                        })}
+                      </span>
                     </div>
                   </li>
                 ))}

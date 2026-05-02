@@ -23,6 +23,8 @@ class PostOutputSchema(Schema):
     id: int
     title: str
     content: str
+    job_type: Optional[str] = "other"
+    location: Optional[str] = ""
     author: AuthorSchema
     created_at: datetime
 

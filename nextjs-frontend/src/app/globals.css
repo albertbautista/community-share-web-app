@@ -101,6 +101,48 @@ body {
   padding: 15px;
 }
 
+.box-content ol li a {
+  color: #1d4ed8;
+  text-decoration: underline;
+  text-decoration-skip-ink: none;
+  -webkit-text-decoration-skip: none;
+}
+
+.box-content ol li a:hover {
+  color: #1e40af;
+}
+
+.recent-posts {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.recent-post-item {
+  padding: 16px 0;
+  border-bottom: 1px solid #e1e5ec;
+}
+
+.recent-post-item:last-child {
+  border-bottom: none;
+}
+
+.recent-post-item h3 {
+  margin: 0;
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: #1d3354;
+}
+
+.recent-post-meta {
+  margin-top: 8px;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+  color: #5c6d85;
+  font-size: 0.95rem;
+}
 
 .services-grid {
   display: grid;
