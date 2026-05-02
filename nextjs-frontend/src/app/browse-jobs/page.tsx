@@ -1,58 +1,8 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect, useMemo } from "react";
 import Navbar from "@/components/Navbar";
-
-const sampleJobs = [
-  {
-    id: 1,
-    title: "Lawn Mowing & Edging",
-    job_type: "Yard Work",
-    location: "Eastside",
-    content: "Need someone to mow and edge the lawn weekly. About 1/4 acre. Equipment provided.",
-    posted: "April 7, 2026",
-  },
-  {
-    id: 2,
-    title: "Leaky Faucet Repair",
-    job_type: "Plumbing",
-    location: "Downtown",
-    content: "Kitchen faucet is dripping constantly. Looking for a licensed plumber or someone experienced.",
-    posted: "April 6, 2026",
-  },
-  {
-    id: 3,
-    title: "Interior Room Painting",
-    job_type: "Painting",
-    location: "Westside",
-    content: "Two bedrooms need repainting. Paint and supplies will be provided. Looking for a clean finish.",
-    posted: "April 5, 2026",
-  },
-  {
-    id: 4,
-    title: "IKEA Furniture Assembly",
-    job_type: "Furniture Assembly",
-    location: "Northpark",
-    content: "Need help assembling a wardrobe and two bookshelves. Should take about 2-3 hours.",
-    posted: "April 5, 2026",
-  },
-  {
-    id: 5,
-    title: "Outdoor Light Installation",
-    job_type: "Electrical",
-    location: "Southgate",
-    content: "Installing two outdoor security lights. Must have electrical experience. Job site is single story.",
-    posted: "April 4, 2026",
-  },
-  {
-    id: 6,
-    title: "General Home Maintenance",
-    job_type: "General Maintenance",
-    location: "Eastside",
-    content: "Fixing a few odds and ends around the house — door hinges, weatherstripping, and a stuck window.",
-    posted: "April 3, 2026",
-  },
-];
+import { getAllPosts, Post } from "@/services/api";
 
 const categories = [
   "All",
@@ -68,15 +18,52 @@ const categories = [
 export default function BrowseJobsPage() {
   const [search, setSearch] = useState("");
   const [category, setCategory] = useState("All");
+  const [jobs, setJobs] = useState<Post[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
 
-  const filtered = sampleJobs.filter((job) => {
-    const matchesCategory = category === "All" || job.job_type === category;
-    const matchesSearch =
-      job.title.toLowerCase().includes(search.toLowerCase()) ||
-      job.location.toLowerCase().includes(search.toLowerCase()) ||
-      job.content.toLowerCase().includes(search.toLowerCase());
-    return matchesCategory && matchesSearch;
-  });
+  useEffect(() => {
+    let active = true;
+
+    getAllPosts()
+      .then((data) => {
+        if (!active) return;
+        setJobs(data);
+        setError(null);
+      })
+      .catch((err) => {
+        if (!active) return;
+        setError(err.message || "Unable to load jobs.");
+      })
+      .finally(() => {
+        if (!active) return;
+        setLoading(false);
+      });
+
+    return () => {
+      active = false;
+    };
+  }, []);
+
+  const filtered = useMemo(
+    () =>
+      jobs.filter((job) => {
+        const matchesCategory = category === "All" || job.job_type === category;
+        const matchesSearch =
+          job.title.toLowerCase().includes(search.toLowerCase()) ||
+          job.location.toLowerCase().includes(search.toLowerCase()) ||
+          job.content.toLowerCase().includes(search.toLowerCase());
+        return matchesCategory && matchesSearch;
+      }),
+    [jobs, search, category],
+  );
+
+  const formatDate = (value: string) =>
+    new Date(value).toLocaleDateString(undefined, {
+      month: "long",
+      day: "numeric",
+      year: "numeric",
+    });
 
   return (
     <>
@@ -216,7 +203,15 @@ export default function BrowseJobsPage() {
             </div>
 
             <div style={{ padding: "20px" }}>
-              {filtered.length === 0 ? (
+              {loading ? (
+                <p style={{ fontSize: "1rem", color: "#555" }}>
+                  Loading jobs...
+                </p>
+              ) : error ? (
+                <p style={{ fontSize: "1rem", color: "#c0392b" }}>
+                  {error}
+                </p>
+              ) : filtered.length === 0 ? (
                 <p style={{ fontSize: "1rem", color: "#555" }}>
                   No jobs match your search. Try adjusting your filters.
                 </p>
@@ -267,7 +262,7 @@ export default function BrowseJobsPage() {
                       }}
                     >
                       <span>Location: {job.location}</span>
-                      <span>Posted: {job.posted}</span>
+                      <span>Posted by {job.author.username}: {formatDate(job.created_at)}</span>
                     </div>
                   </div>
                 ))
