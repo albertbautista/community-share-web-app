@@ -3,18 +3,34 @@ const BASE_URL =
 
 async function apiFetch<T>(path: string, options: RequestInit = {}): Promise<T> {
   const url = `${BASE_URL}${path}`;
+  const headers: Record<string, string> = {
+    "Content-Type": "application/json",
+  };
+
+  if (options.headers) {
+    Object.assign(headers, options.headers as Record<string, string>);
+  }
+
+  if (typeof window !== "undefined") {
+    const token = localStorage.getItem("communityShareToken");
+    if (token) {
+      headers.Authorization = `Bearer ${token}`;
+    }
+  }
+
   const response = await fetch(url, {
-    headers: {
-      "Content-Type": "application/json",
-      ...(options.headers ?? {}),
-    },
     ...options,
+    headers,
   });
 
   if (!response.ok) {
     const body = await response.json().catch(() => null);
     const error = body?.error || response.statusText || "Request failed";
     throw new Error(String(error));
+  }
+
+  if (response.status === 204) {
+    return undefined as unknown as T;
   }
 
   return response.json();
@@ -31,6 +47,13 @@ export type RecentPost = {
 export type Post = RecentPost & {
   job_type: string;
   location: string;
+};
+
+export type PostInput = {
+  title: string;
+  job_type: string;
+  location: string;
+  content: string;
 };
 
 export type JobTypeCount = {
@@ -55,6 +78,30 @@ export const getRecentPosts = async (limit = 6): Promise<RecentPost[]> => {
 
 export const getAllPosts = async (): Promise<Post[]> => {
   return apiFetch<Post[]>(`/posts/`);
+};
+
+export const getMyPosts = async (): Promise<Post[]> => {
+  return apiFetch<Post[]>(`/posts/my-posts`);
+};
+
+export const createPost = async (data: PostInput): Promise<Post> => {
+  return apiFetch<Post>(`/posts/`, {
+    method: "POST",
+    body: JSON.stringify(data),
+  });
+};
+
+export const updatePost = async (postId: number, data: PostInput): Promise<Post> => {
+  return apiFetch<Post>(`/posts/${postId}`, {
+    method: "PUT",
+    body: JSON.stringify(data),
+  });
+};
+
+export const deletePost = async (postId: number): Promise<void> => {
+  return apiFetch<void>(`/posts/${postId}`, {
+    method: "DELETE",
+  });
 };
 
 export const getPopularJobTypes = async (

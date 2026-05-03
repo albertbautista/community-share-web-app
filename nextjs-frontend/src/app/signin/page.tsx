@@ -10,6 +10,7 @@ import { useAuth } from "@/context/AuthContext";
 
 export default function SignInPage() {
   const [status, setStatus] = useState<string | null>(null);
+  const [isError, setIsError] = useState(false);
   const [loading, setLoading] = useState(false);
   const { login } = useAuth();
   const router = useRouter();
@@ -17,6 +18,7 @@ export default function SignInPage() {
   async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
     setStatus(null);
+    setIsError(false);
     setLoading(true);
 
     const formData = new FormData(e.currentTarget);
@@ -24,6 +26,7 @@ export default function SignInPage() {
     const password = String(formData.get("password") ?? "");
 
     if (!username || !password) {
+      setIsError(true);
       setStatus("Please fill in all required fields.");
       setLoading(false);
       return;
@@ -34,6 +37,7 @@ export default function SignInPage() {
       login(data.access);
       router.push("/");
     } catch (error) {
+      setIsError(true);
       setStatus(error instanceof Error ? error.message : "An error occurred.");
     } finally {
       setLoading(false);
@@ -106,8 +110,8 @@ export default function SignInPage() {
               <p style={{
                 marginTop: "15px",
                 padding: "10px",
-                backgroundColor: status.includes("error") || status.includes("Error") ? "#fdd" : "#efe",
-                border: `1px solid ${status.includes("error") || status.includes("Error") ? "#fbb" : "#bfb"}`,
+                backgroundColor: isError ? "#fdd" : "#efe",
+                border: `1px solid ${isError ? "#fbb" : "#bfb"}`,
                 borderRadius: "3px",
                 fontSize: "14px",
               }}>

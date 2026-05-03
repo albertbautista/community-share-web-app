@@ -8,6 +8,16 @@ import { getPopularJobTypes, getRecentPosts } from "@/services/api";
 
 export const dynamic = "force-dynamic";
 
+const jobTypeLabels: Record<string, string> = {
+  plumbing: "Plumbing",
+  electrical: "Electrical",
+  painting: "Painting",
+  yard: "Yard Work",
+  assembly: "Furniture Assembly",
+  maintenance: "General Maintenance",
+  other: "Other",
+};
+
 export default async function Home() {
   const [posts, jobTypes] = await Promise.all([
     getRecentPosts(6),
@@ -20,7 +30,7 @@ export default async function Home() {
 
       <div className="layout">
         <Hero />
-        <Services jobTypes={jobTypes.map((item) => item.job_type)} />
+        <Services jobTypes={jobTypes.map((item) => jobTypeLabels[item.job_type] || item.job_type)} />
 
         <section className="box">
           <div className="box-header">Recent Community Jobs</div>

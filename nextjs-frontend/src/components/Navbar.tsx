@@ -19,7 +19,7 @@ export default function Navbar() {
                 <Link href="/">Home</Link>
                 <Link href="/post-job">Post a Job</Link>
                 <Link href="/browse-jobs">Browse Jobs</Link>
-                <Link href="/view">My Jobs</Link>
+                <Link href="/my-jobs">My Jobs</Link>
             </div>
 
             <div className="navbar-right">

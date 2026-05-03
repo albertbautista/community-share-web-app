@@ -1,10 +1,14 @@
 "use client";
 
 import { useState } from "react";
+import { useRouter } from "next/navigation";
+import Link from "next/link";
 import Navbar from "@/components/Navbar";
+import { useAuth } from "@/context/AuthContext";
+import { createPost, PostInput } from "@/services/api";
 
 export default function PostPage() {
-  const [formData, setFormData] = useState({
+  const [formData, setFormData] = useState<PostInput>({
     title: "",
     job_type: "",
     location: "",
@@ -12,6 +16,62 @@ export default function PostPage() {
   });
 
   const [submitted, setSubmitted] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [status, setStatus] = useState<string | null>(null);
+  const { isAuthenticated } = useAuth();
+  const router = useRouter();
+
+  if (!isAuthenticated) {
+  return (
+    <>
+      <Navbar />
+      <main style={{ padding: "30px 0" }}>
+        <div style={{ width: "86%", margin: "0 auto" }}>
+          <section
+            style={{
+              backgroundColor: "white",
+              border: "1px solid #9db2cf",
+            }}
+          >
+            <div
+              style={{
+                backgroundColor: "#2f5e9e",
+                padding: "16px",
+                borderBottom: "1px solid #9db2cf",
+              }}
+            >
+              <h1
+                style={{
+                  margin: 0,
+                  fontSize: "2rem",
+                  fontWeight: "bold",
+                  color: "white",
+                }}
+              >
+                Make a Post
+              </h1>
+            </div>
+            <div style={{ padding: "20px" }}>
+              <p style={{ fontSize: "1.2rem", marginTop: 0 }}>
+                You must be logged in to post a job.
+              </p>
+              <p style={{ fontSize: "1.2rem" }}>
+                <Link href="/signin" style={{ color: "#3b6db0", textDecoration: "underline" }}>
+                  Sign in
+                </Link>{" "}
+                or{" "}
+                <Link href="/signup" style={{ color: "#3b6db0", textDecoration: "underline" }}>
+                  sign up
+                </Link>{" "}
+                to continue.
+              </p>
+            </div>
+          </section>
+        </div>
+      </main>
+    </>
+  );
+}
 
   function handleChange(
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>
@@ -23,18 +83,28 @@ export default function PostPage() {
     }));
   }
 
-  function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
+  async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
+    setStatus(null);
 
-    console.log("Job Post Submitted:", formData);
-    setSubmitted(true);
+    if (!isAuthenticated) {
+      setStatus("Please sign in before posting a job.");
+      return;
+    }
 
-    setFormData({
-      title: "",
-      job_type: "",
-      location: "",
-      content: "",
-    });
+    setLoading(true);
+
+    try {
+      await createPost(formData);
+      setSubmitted(true);
+      setFormData({ title: "", job_type: "", location: "", content: "" });
+      setStatus("Your job was posted successfully.");
+      router.push("/my-jobs");
+    } catch (error) {
+      setStatus(error instanceof Error ? error.message : "Unable to submit job.");
+    } finally {
+      setLoading(false);
+    }
   }
 
   return (
@@ -100,16 +170,16 @@ export default function PostPage() {
             </div>
 
             <div style={{ padding: "20px" }}>
-              {submitted && (
+              {status && (
                 <div
                   style={{
                     marginBottom: "20px",
                     padding: "12px",
-                    backgroundColor: "#e8f4ea",
-                    border: "1px solid #9ac7a3",
+                    backgroundColor: submitted ? "#e8f4ea" : "#ffe8e8",
+                    border: `1px solid ${submitted ? "#9ac7a3" : "#e59b9b"}`,
                   }}
                 >
-                  Your job post was submitted successfully.
+                  {status}
                 </div>
               )}
 
@@ -220,6 +290,7 @@ export default function PostPage() {
 
                 <button
                   type="submit"
+                  disabled={loading}
                   style={{
                     backgroundColor: "#2f5e9e",
                     color: "white",
@@ -229,7 +300,7 @@ export default function PostPage() {
                     fontSize: "1rem",
                   }}
                 >
-                  Submit Post
+                  {loading ? "Posting..." : "Submit Post"}
                 </button>
               </form>
             </div>
