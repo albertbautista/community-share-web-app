@@ -155,8 +155,8 @@ export const updatePost = async (postId: number, data: PostInput): Promise<Post>
     formData.append("image", data.image);
   }
 
-  return apiFetch<Post>(`/posts/${postId}`, {
-    method: "PUT",
+  return apiFetch<Post>(`/posts/${postId}/update`, {
+    method: "POST",
     body: formData,
   });
 };

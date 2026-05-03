@@ -39,7 +39,7 @@ class PostOutputSchema(Schema):
 
     @staticmethod
     def resolve_image(obj):
-        return obj.image.url if getattr(obj, "image", None) else None
+        return obj.image.url if getattr(obj, "image", None) else None   
 
 class ErrorOutputSchema(Schema):
     error: str

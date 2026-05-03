@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import Link from "next/link";
 import Navbar from "@/components/Navbar";
 import { useAuth } from "@/context/AuthContext";
-import { getMyPosts, updatePost, deletePost, Post } from "@/services/api";
+import { getMyPosts, updatePost, deletePost, Post, PostInput } from "@/services/api";
 
 const jobTypes = [
   "plumbing",
@@ -29,13 +29,7 @@ const jobTypeLabels: Record<string, string> = {
 
 const formatJobType = (value: string) => jobTypeLabels[value.toLowerCase()] || value;
 
-type EditJobData = {
-  title: string;
-  job_type: string;
-  location: string;
-  pay_rate: number | undefined;
-  content: string;
-};
+type EditJobData = PostInput;
 
 export default function MyJobsPage() {
   const { isAuthenticated } = useAuth();
@@ -49,6 +43,7 @@ export default function MyJobsPage() {
     job_type: "",
     location: "",
     pay_rate: undefined,
+    image: null,
     content: "",
   });
   const [saving, setSaving] = useState(false);
@@ -67,6 +62,7 @@ export default function MyJobsPage() {
     getMyPosts()
       .then((data) => {
         if (!active) return;
+        console.log("my jobs payload:", data);
         setJobs(data);
       })
       .catch((err) => {
@@ -90,6 +86,14 @@ export default function MyJobsPage() {
       year: "numeric",
     });
 
+  const getImageSrc = (value: string) =>
+    value.startsWith("http://") || value.startsWith("https://")
+      ? value
+      : `http://127.0.0.1:8000${value}`;
+
+  const getSelectedImagePreview = (file: File | null | undefined) =>
+    file ? URL.createObjectURL(file) : null;
+
   const handleEditClick = (job: Post) => {
     setEditingId(job.id);
     setEditData({
@@ -97,6 +101,7 @@ export default function MyJobsPage() {
       job_type: job.job_type || "",
       location: job.location || "",
       pay_rate: job.pay_rate ?? undefined,
+      image: null,
       content: job.content || "",
     });
     setStatus(null);
@@ -104,13 +109,23 @@ export default function MyJobsPage() {
 
   const handleCancelEdit = () => {
     setEditingId(null);
-    setEditData({ title: "", job_type: "", location: "", pay_rate: undefined, content: "" });
+    setEditData({ title: "", job_type: "", location: "", pay_rate: undefined, image: null, content: "" });
   };
 
   const handleEditChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>,
   ) => {
-    const { name, value } = e.target;
+    const { name, value } = e.currentTarget;
+
+    if (name === "image") {
+      const input = e.currentTarget as HTMLInputElement;
+      setEditData((prev) => ({
+        ...prev,
+        image: input.files?.[0] ?? null,
+      }));
+      return;
+    }
+
     setEditData((prev) => ({
       ...prev,
       [name]: name === "pay_rate" ? (value === "" ? undefined : Number(value)) : value,
@@ -366,6 +381,59 @@ export default function MyJobsPage() {
                             style={{ width: "100%", padding: "10px", border: "1px solid #9db2cf", boxSizing: "border-box" }}
                           />
                         </div>
+
+                        <div style={{ marginBottom: "14px" }}>
+                          <label style={{ display: "block", marginBottom: "8px", fontWeight: "bold" }}>
+                            Current Image
+                          </label>
+                          {job.image ? (
+                            <img
+                              src={getImageSrc(job.image)}
+                              alt={job.title}
+                              style={{
+                                display: "block",
+                                maxWidth: "220px",
+                                height: "auto",
+                                border: "1px solid #9db2cf",
+                              }}
+                            />
+                          ) : (
+                            <p style={{ margin: 0, color: "#666", fontSize: "0.95rem" }}>
+                              No image uploaded for this job yet.
+                            </p>
+                          )}
+                        </div>
+
+                        <div style={{ marginBottom: "14px" }}>
+                          <label style={{ display: "block", marginBottom: "8px", fontWeight: "bold" }}>
+                            Replace Image
+                          </label>
+                          <input
+                            name="image"
+                            type="file"
+                            accept="image/*"
+                            onChange={handleEditChange}
+                            style={{ width: "100%", padding: "10px", border: "1px solid #9db2cf", boxSizing: "border-box" }}
+                          />
+                        </div>
+
+                        {editData.image && (
+                          <div style={{ marginBottom: "14px" }}>
+                            <label style={{ display: "block", marginBottom: "8px", fontWeight: "bold" }}>
+                              New Image Preview
+                            </label>
+                            <img
+                              src={getSelectedImagePreview(editData.image) ?? ""}
+                              alt={`New preview for ${job.title}`}
+                              style={{
+                                display: "block",
+                                maxWidth: "220px",
+                                height: "auto",
+                                border: "1px solid #9db2cf",
+                              }}
+                            />
+                          </div>
+                        )}
 
                         <div style={{ marginBottom: "14px" }}>
                           <label style={{ display: "block", marginBottom: "8px", fontWeight: "bold" }}>

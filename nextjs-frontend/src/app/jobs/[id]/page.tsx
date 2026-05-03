@@ -47,6 +47,7 @@ export default async function JobDetailPage({ params }: JobDetailPageProps) {
   }
 
   const job = await getPostById(postId);
+  console.log("job detail payload:", job);
 
   return (
     <>
@@ -139,7 +140,8 @@ export default async function JobDetailPage({ params }: JobDetailPageProps) {
                     unoptimized
                     sizes="(max-width: 768px) 100vw, 80vw"
                     style={{
-                      maxWidth: "100%",
+                      width: "100%",
+                      maxWidth: "320px",
                       height: "auto",
                       border: "1px solid #9db2cf",
                     }}

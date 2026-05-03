@@ -56,10 +56,15 @@ def get_posts(request):
     return 200, serialize_posts(posts)
 
 # Get all posts created by the user (PROTECTED)
-@router.get("/my-posts", auth=JWTAuth(), response={200: list[PostOutputSchema]})
+@router.get("/my-posts", auth=JWTAuth())
 def get_my_posts(request):
-    posts = Post.objects.select_related("author", "accepted_by").filter(author=request.user).order_by("-created_at")
-    return 200, serialize_posts(posts)
+    posts = (
+        Post.objects
+        .select_related("author", "accepted_by")
+        .filter(author=request.user)
+        .order_by("-created_at")
+    )
+    return serialize_posts(posts)
 
 # List saved posts (PROTECTED)
 @router.get("/saved", auth=JWTAuth(), response={200: list[PostOutputSchema]})
@@ -121,10 +126,10 @@ def unaccept_post(request, post_id: int):
     return 200, serialize_post(post)
 
 # Get a single post by its id
-@router.get("/{post_id}", response={200: PostOutputSchema}) 
+@router.get("/{post_id}",) 
 def get_post(request, post_id: int):
     post = get_object_or_404(Post.objects.select_related("author", "accepted_by"), id=post_id)
-    return 200, serialize_post(post)
+    return serialize_post(post)
 
 # Create a post (PROTECTED)
 @router.post("/", auth=JWTAuth(), response={201: PostOutputSchema})
@@ -146,14 +151,10 @@ def create_post(request):
         image=image,
         author=request.user,
     )
-
-    print("POST:", request.POST)
-    print("FILES:", request.FILES)
-
     return 201, serialize_post(post)
 
 # Update a single post by its id (PROTECTED)
-@router.put("/{post_id}", auth=JWTAuth(), response={200: PostOutputSchema, 400: ErrorOutputSchema, 403: ErrorOutputSchema})
+@router.post("/{post_id}/update", auth=JWTAuth())
 def update_post(request, post_id: int):
     post = get_object_or_404(Post, id=post_id)
 
