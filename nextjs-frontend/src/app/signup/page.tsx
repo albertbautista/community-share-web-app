@@ -9,12 +9,14 @@ import { signUp } from "../../services/api";
 
 export default function SignUpPage() {
   const [status, setStatus] = useState<string | null>(null);
+  const [isError, setIsError] = useState(false);
   const [loading, setLoading] = useState(false);
   const router = useRouter();
 
   async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
     setStatus(null);
+    setIsError(false);
     setLoading(true);
 
     const formData = new FormData(e.currentTarget);
@@ -23,6 +25,7 @@ export default function SignUpPage() {
     const password = String(formData.get("password") ?? "");
 
     if (!username || !email || !password) {
+      setIsError(true);
       setStatus("Please fill in all required fields.");
       setLoading(false);
       return;
@@ -30,11 +33,13 @@ export default function SignUpPage() {
 
     try {
       await signUp({ username, email, password });
+      setIsError(false);
       setStatus("Account created successfully. Redirecting to sign in...");
       setTimeout(() => {
         router.push("/signin");
       }, 1500);
     } catch (error) {
+      setIsError(true);
       setStatus(error instanceof Error ? error.message : "An error occurred.");
     } finally {
       setLoading(false);
@@ -124,8 +129,8 @@ export default function SignUpPage() {
               <p style={{
                 marginTop: "15px",
                 padding: "10px",
-                backgroundColor: status.includes("error") || status.includes("Error") ? "#fdd" : "#efe",
-                border: `1px solid ${status.includes("error") || status.includes("Error") ? "#fbb" : "#bfb"}`,
+                backgroundColor: isError ? "#fdd" : "#efe",
+                border: `1px solid ${isError ? "#fbb" : "#bfb"}`,
                 borderRadius: "3px",
                 fontSize: "14px",
               }}>
