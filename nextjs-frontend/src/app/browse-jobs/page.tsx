@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect, useMemo } from "react";
+import Link from "next/link";
 import Navbar from "@/components/Navbar";
 import { getAllPosts, Post } from "@/services/api";
 
@@ -229,12 +230,16 @@ export default function BrowseJobsPage() {
                 </p>
               ) : (
                 filtered.map((job, index) => (
-                  <div
+                  <Link
                     key={job.id}
+                    href={`/jobs/${job.id}`}
                     style={{
+                      display: "block",
                       border: "1px solid #9db2cf",
                       padding: "16px",
                       marginBottom: index < filtered.length - 1 ? "16px" : 0,
+                      textDecoration: "none",
+                      color: "inherit",
                     }}
                   >
                     <div
@@ -276,7 +281,7 @@ export default function BrowseJobsPage() {
                       <span>Location: {job.location}</span>
                       <span>Posted by {job.author.username}: {formatDate(job.created_at)}</span>
                     </div>
-                  </div>
+                  </Link>
                 ))
               )}
             </div>

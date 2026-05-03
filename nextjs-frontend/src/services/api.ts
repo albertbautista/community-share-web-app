@@ -3,9 +3,11 @@ const BASE_URL =
 
 async function apiFetch<T>(path: string, options: RequestInit = {}): Promise<T> {
   const url = `${BASE_URL}${path}`;
-  const headers: Record<string, string> = {
-    "Content-Type": "application/json",
-  };
+  const headers: Record<string, string> = {};
+
+  if (!(options.body instanceof FormData)) {
+    headers["Content-Type"] = "application/json";
+  }
 
   if (options.headers) {
     Object.assign(headers, options.headers as Record<string, string>);
@@ -36,23 +38,34 @@ async function apiFetch<T>(path: string, options: RequestInit = {}): Promise<T> 
   return response.json();
 }
 
+export type UserSummary = {
+  username: string;
+};
+
 export type RecentPost = {
   id: number;
   title: string;
   content: string;
-  author: { username: string };
+  author: UserSummary;
   created_at: string;
 };
 
 export type Post = RecentPost & {
   job_type: string;
   location: string;
+  pay_rate: number | null;
+  image: string | null;
+  status: string;
+  accepted_by: UserSummary | null;
+  accepted_at: string | null;
 };
 
 export type PostInput = {
   title: string;
   job_type: string;
   location: string;
+  pay_rate?: number | null;
+  image?: File | null;
   content: string;
 };
 
@@ -80,27 +93,89 @@ export const getAllPosts = async (): Promise<Post[]> => {
   return apiFetch<Post[]>(`/posts/`);
 };
 
+export const getPostById = async (postId: number): Promise<Post> => {
+  return apiFetch<Post>(`/posts/${postId}`);
+};
+
 export const getMyPosts = async (): Promise<Post[]> => {
   return apiFetch<Post[]>(`/posts/my-posts`);
 };
 
+export const getSavedPosts = async (): Promise<Post[]> => {
+  return apiFetch<Post[]>(`/posts/saved`);
+};
+
 export const createPost = async (data: PostInput): Promise<Post> => {
+  const formData = new FormData();
+  formData.append("title", data.title);
+  formData.append("job_type", data.job_type);
+  formData.append("location", data.location);
+  formData.append("content", data.content);
+
+  if (data.pay_rate != null) {
+    formData.append("pay_rate", String(data.pay_rate));
+  }
+
+  if (data.image) {
+    formData.append("image", data.image);
+  }
+
   return apiFetch<Post>(`/posts/`, {
     method: "POST",
-    body: JSON.stringify(data),
+    body: formData,
+  });
+};
+
+export const savePost = async (
+  postId: number,
+): Promise<{ saved: boolean; created: boolean }> => {
+  return apiFetch<{ saved: boolean; created: boolean }>(`/posts/${postId}/save`, {
+    method: "POST",
+  });
+};
+
+export const unsavePost = async (postId: number): Promise<void> => {
+  return apiFetch<void>(`/posts/${postId}/save`, {
+    method: "DELETE",
   });
 };
 
 export const updatePost = async (postId: number, data: PostInput): Promise<Post> => {
-  return apiFetch<Post>(`/posts/${postId}`, {
-    method: "PUT",
-    body: JSON.stringify(data),
+  const formData = new FormData();
+  formData.append("title", data.title);
+  formData.append("job_type", data.job_type);
+  formData.append("location", data.location);
+  formData.append("content", data.content);
+
+  if (data.pay_rate != null) {
+    formData.append("pay_rate", String(data.pay_rate));
+  }
+
+  if (data.image) {
+    formData.append("image", data.image);
+  }
+
+  return apiFetch<Post>(`/posts/${postId}/update`, {
+    method: "POST",
+    body: formData,
   });
 };
 
 export const deletePost = async (postId: number): Promise<void> => {
   return apiFetch<void>(`/posts/${postId}`, {
     method: "DELETE",
+  });
+};
+
+export const acceptPost = async (postId: number): Promise<Post> => {
+  return apiFetch<Post>(`/posts/${postId}/accept`, {
+    method: "POST",
+  });
+};
+
+export const unacceptPost = async (postId: number): Promise<Post> => {
+  return apiFetch<Post>(`/posts/${postId}/unaccept`, {
+    method: "POST",
   });
 };
 

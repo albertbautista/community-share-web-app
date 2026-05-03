@@ -34,7 +34,7 @@ export default function SignInPage() {
 
     try {
       const data = await signIn({ username, password });
-      login(data.access);
+      login(data.access, username);
       router.push("/");
     } catch (error) {
       setIsError(true);

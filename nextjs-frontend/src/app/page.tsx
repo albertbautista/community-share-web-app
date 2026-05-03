@@ -1,4 +1,5 @@
-﻿import NavBar from "@/components/Navbar";
+﻿import Link from "next/link";
+import NavBar from "@/components/Navbar";
 import Hero from "@/components/Hero";
 import Howitworks from "@/components/howitworks";
 import Footer from "@/components/Footer";
@@ -33,7 +34,14 @@ export default async function Home() {
         <Services jobTypes={jobTypes.map((item) => jobTypeLabels[item.job_type] || item.job_type)} />
 
         <section className="box">
-          <div className="box-header">Recent Community Jobs</div>
+          <div className="box-header">
+            <Link
+              href="/browse-jobs"
+              style={{ color: "inherit", textDecoration: "none" }}
+            >
+              Recent Community Jobs
+            </Link>
+          </div>
           <div className="box-content">
             {posts.length === 0 ? (
               <p>No recent jobs found.</p>
@@ -41,17 +49,26 @@ export default async function Home() {
               <ul className="recent-posts">
                 {posts.map((post) => (
                   <li key={post.id} className="recent-post-item">
-                    <h3>{post.title}</h3>
-                    <div className="recent-post-meta">
-                      <span>Posted by {post.author.username}:</span>
-                      <span>
-                        {new Date(post.created_at).toLocaleDateString(undefined, {
-                          month: "long",
-                          day: "numeric",
-                          year: "numeric",
-                        })}
-                      </span>
-                    </div>
+                    <Link
+                      href={`/jobs/${post.id}`}
+                      style={{
+                        display: "block",
+                        textDecoration: "none",
+                        color: "inherit",
+                      }}
+                    >
+                      <h3>{post.title}</h3>
+                      <div className="recent-post-meta">
+                        <span>Posted by {post.author.username}:</span>
+                        <span>
+                          {new Date(post.created_at).toLocaleDateString(undefined, {
+                            month: "long",
+                            day: "numeric",
+                            year: "numeric",
+                          })}
+                        </span>
+                      </div>
+                    </Link>
                   </li>
                 ))}
               </ul>

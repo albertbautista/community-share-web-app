@@ -5,7 +5,8 @@ import React, { createContext, useContext, useState, useEffect } from "react";
 interface AuthContextType {
   isAuthenticated: boolean;
   token: string | null;
-  login: (token: string) => void;
+  username: string | null;
+  login: (token: string, username?: string | null) => void;
   logout: () => void;
 }
 
@@ -16,10 +17,12 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     isHydrated: boolean;
     isAuthenticated: boolean;
     token: string | null;
+    username: string | null;
   }>({
     isHydrated: false,
     isAuthenticated: false,
     token: null,
+    username: null,
   });
 
   // Initialize auth state from localStorage after hydration
@@ -27,36 +30,45 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   useEffect(() => {
     try {
       const storedToken = localStorage.getItem("communityShareToken");
+      const storedUsername = localStorage.getItem("communityShareUsername");
       // eslint-disable-next-line react-hooks/set-state-in-effect
       setState({
         isHydrated: true,
         isAuthenticated: !!storedToken,
         token: storedToken,
+        username: storedUsername,
       });
     } catch {
       setState({
         isHydrated: true,
         isAuthenticated: false,
         token: null,
+        username: null,
       });
     }
   }, []);
 
-  const login = (newToken: string) => {
+  const login = (newToken: string, newUsername: string | null = null) => {
     localStorage.setItem("communityShareToken", newToken);
+    if (newUsername) {
+      localStorage.setItem("communityShareUsername", newUsername);
+    }
     setState({
       isHydrated: true,
       isAuthenticated: true,
       token: newToken,
+      username: newUsername,
     });
   };
 
   const logout = () => {
     localStorage.removeItem("communityShareToken");
+    localStorage.removeItem("communityShareUsername");
     setState({
       isHydrated: true,
       isAuthenticated: false,
       token: null,
+      username: null,
     });
   };
 
@@ -65,6 +77,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       value={{
         isAuthenticated: state.isAuthenticated,
         token: state.token,
+        username: state.username,
         login,
         logout,
       }}
