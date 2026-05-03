@@ -12,6 +12,8 @@ export default function PostPage() {
     title: "",
     job_type: "",
     location: "",
+    pay_rate: undefined,
+    image: null,
     content: "",
   });
 
@@ -76,10 +78,20 @@ export default function PostPage() {
   function handleChange(
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>
   ) {
-    const { name, value } = e.target;
+    const { name, value } = e.currentTarget;
+
+    if (name === "image") {
+      const input = e.currentTarget as HTMLInputElement;
+      setFormData((prev) => ({
+        ...prev,
+        image: input.files?.[0] ?? null,
+      }));
+      return;
+    }
+
     setFormData((prev) => ({
       ...prev,
-      [name]: value,
+      [name]: name === "pay_rate" ? (value === "" ? undefined : Number(value)) : value,
     }));
   }
 
@@ -97,7 +109,7 @@ export default function PostPage() {
     try {
       await createPost(formData);
       setSubmitted(true);
-      setFormData({ title: "", job_type: "", location: "", content: "" });
+      setFormData({ title: "", job_type: "", location: "", pay_rate: undefined, image: null, content: "" });
       setStatus("Your job was posted successfully.");
       router.push("/my-jobs");
     } catch (error) {
@@ -259,6 +271,54 @@ export default function PostPage() {
                       padding: "12px",
                       border: "1px solid #9db2cf",
                       fontSize: "1rem",
+                    }}
+                  />
+                </div>
+
+                <div style={{ marginBottom: "16px" }}>
+                  <label
+                    htmlFor="pay_rate"
+                    style={{ display: "block", marginBottom: "8px", fontWeight: "bold" }}
+                  >
+                    Pay Rate
+                  </label>
+                  <input
+                    type="number"
+                    id="pay_rate"
+                    name="pay_rate"
+                    value={formData.pay_rate ?? ""}
+                    onChange={handleChange}
+                    placeholder="Enter hourly rate or total pay"
+                    min="0"
+                    step="0.01"
+                    style={{
+                      width: "100%",
+                      padding: "12px",
+                      border: "1px solid #9db2cf",
+                      fontSize: "1rem",
+                    }}
+                  />
+                </div>
+
+                <div style={{ marginBottom: "16px" }}>
+                  <label
+                    htmlFor="image"
+                    style={{ display: "block", marginBottom: "8px", fontWeight: "bold" }}
+                  >
+                    Image
+                  </label>
+                  <input
+                    type="file"
+                    id="image"
+                    name="image"
+                    accept="image/*"
+                    onChange={handleChange}
+                    style={{
+                      width: "100%",
+                      padding: "12px",
+                      border: "1px solid #9db2cf",
+                      fontSize: "1rem",
+                      boxSizing: "border-box",
                     }}
                   />
                 </div>

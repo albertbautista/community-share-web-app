@@ -26,7 +26,16 @@ const jobTypeLabels: Record<string, string> = {
   other: "Other",
 };
 
+
 const formatJobType = (value: string) => jobTypeLabels[value.toLowerCase()] || value;
+
+type EditJobData = {
+  title: string;
+  job_type: string;
+  location: string;
+  pay_rate: number | undefined;
+  content: string;
+};
 
 export default function MyJobsPage() {
   const { isAuthenticated } = useAuth();
@@ -35,10 +44,11 @@ export default function MyJobsPage() {
   const [error, setError] = useState<string | null>(null);
   const [status, setStatus] = useState<string | null>(null);
   const [editingId, setEditingId] = useState<number | null>(null);
-  const [editData, setEditData] = useState({
+  const [editData, setEditData] = useState<EditJobData>({
     title: "",
     job_type: "",
     location: "",
+    pay_rate: undefined,
     content: "",
   });
   const [saving, setSaving] = useState(false);
@@ -86,6 +96,7 @@ export default function MyJobsPage() {
       title: job.title,
       job_type: job.job_type || "",
       location: job.location || "",
+      pay_rate: job.pay_rate ?? undefined,
       content: job.content || "",
     });
     setStatus(null);
@@ -93,14 +104,17 @@ export default function MyJobsPage() {
 
   const handleCancelEdit = () => {
     setEditingId(null);
-    setEditData({ title: "", job_type: "", location: "", content: "" });
+    setEditData({ title: "", job_type: "", location: "", pay_rate: undefined, content: "" });
   };
 
   const handleEditChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>,
   ) => {
     const { name, value } = e.target;
-    setEditData((prev) => ({ ...prev, [name]: value }));
+    setEditData((prev) => ({
+      ...prev,
+      [name]: name === "pay_rate" ? (value === "" ? undefined : Number(value)) : value,
+    }));
   };
 
   const handleSave = async (jobId: number) => {
@@ -326,13 +340,28 @@ export default function MyJobsPage() {
                           </select>
                         </div>
 
+                      <div style={{ marginBottom: "14px" }}>
+                        <label style={{ display: "block", marginBottom: "8px", fontWeight: "bold" }}>
+                         Location
+                        </label>
+                        <input
+                          name="location"
+                          value={editData.location}
+                          onChange={handleEditChange}
+                          style={{ width: "100%", padding: "10px", border: "1px solid #9db2cf", boxSizing: "border-box" }}
+                        />
+                      </div>
+
                         <div style={{ marginBottom: "14px" }}>
                           <label style={{ display: "block", marginBottom: "8px", fontWeight: "bold" }}>
-                            Location
+                            Pay Rate
                           </label>
                           <input
-                            name="location"
-                            value={editData.location}
+                            name="pay_rate"
+                            type="number"
+                            min="0"
+                            step="0.01"
+                            value={editData.pay_rate ?? ""}
                             onChange={handleEditChange}
                             style={{ width: "100%", padding: "10px", border: "1px solid #9db2cf", boxSizing: "border-box" }}
                           />
@@ -447,7 +476,7 @@ export default function MyJobsPage() {
                           {job.content}
                         </p>
 
-                        {/* Bottom row: location + date */}
+                        {/* Bottom row: location + pay rate + date */}
                         <div
                           style={{
                             display: "flex",
@@ -459,6 +488,7 @@ export default function MyJobsPage() {
                           }}
                         >
                           <span>Location: {job.location || "Unspecified"}</span>
+                          <span>Pay Rate: {job.pay_rate != null ? `$${job.pay_rate.toFixed(2)}` : "Not provided"}</span>
                           <span>Posted by you on {formatDate(job.created_at)}</span>
                         </div>
                       </>
